@@ -35,7 +35,7 @@ input_transforms = transform= transforms.Compose([RescaleCrop(100)\
 
 lookUpTable = np.empty((1,256), np.uint8)
 
-img_names = os.listdir(images_path)
+img_names = (os.listdir(images_path))
 
 
 cv2.namedWindow("corrupted")
@@ -46,8 +46,9 @@ label_name = ort_session.get_outputs()[0].name
 
 x = torch.randn(25, 1, 100, 100, requires_grad=True)
 
-for i in range(1):
+for i in range(1,2):
     
+     print(img_names[i])
      img = cv2.imread(images_path + img_names[i], 0)
      print(img.shape)
      model_in = input_transforms(img)
@@ -74,4 +75,5 @@ cv2.destroyAllWindows()
 
 print(ort_outs)
 
-print(onnxruntime.__version__)
+
+print(model(torch.ones(1, 1, 100, 100)))

@@ -13,12 +13,13 @@ from cDataLoaders import*
 os.system('clear')
 
 
-model      = gammaModel1()
-criterion  = nn.MSELoss()
-optimizer  = optim.Adam(model.parameters(), lr= 0.005)
-threshold  = 0.02
-epochs     = 100
-batch_size = 25
+model       = gammaModel1()
+criterion   = nn.MSELoss()
+optimizer   = optim.Adam(model.parameters(), lr= 0.005)
+threshold   = 0.02
+epochs      = 100
+batch_size  = 25
+dummy_input = example = torch.rand(1, 1, 100, 100)
 
 
 csv_path        = "/home/ibrahim/Projects/Datasets/HPO_Recording/Images/Annotations.csv"
@@ -115,6 +116,10 @@ for epoch in range(epochs):
             'optimizer_state_dict': optimizer.state_dict(),
             'loss': loss,
             }, model_save_path + "gamma_correction.pth")
+
+        traced_script_module = torch.jit.trace(model, dummy_input)
+        traced_script_module.save(model_save_path + "gamma_model_cpp.pt")
+
 
     # print("epoch loss " + str(epoch) + "  " + str(epoch_loss_train))
     print(str(epoch) + "\t" + str(best_acc)\
